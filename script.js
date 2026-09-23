@@ -1,6 +1,6 @@
 /* =========================================================
    JARVIS — PERSONAL AI ASSISTANT
-   PHASE 1 — FRONTEND ENGINE
+   PHASE 1 + PHASE 2 — FRONTEND + ANDROID BRIDGE ENGINE
 ========================================================= */
 
 "use strict";
@@ -113,6 +113,15 @@ let speechTimer = null;
 
 
 /* =========================================================
+   ANDROID PHASE 2 STATUS
+========================================================= */
+
+let androidConnected = false;
+
+let androidMicrophoneGranted = false;
+
+
+/* =========================================================
    03. INITIALIZATION
 ========================================================= */
 
@@ -136,6 +145,8 @@ function initializeJarvis() {
     initializeQuickCommands();
 
     initializeKeyboardControls();
+
+    initializeAndroidBridge();
 
     setState(JARVIS_STATE.IDLE);
 
@@ -379,7 +390,9 @@ function applyIdleState() {
         "READY";
 
     systemStatus.textContent =
-        "READY";
+        androidConnected
+            ? "ANDROID READY"
+            : "READY";
 
     footerVoice.textContent =
         "STANDBY";
@@ -394,7 +407,9 @@ function applyIdleState() {
         "ASSISTANT";
 
     backgroundBadge.textContent =
-        "READY";
+        androidConnected
+            ? "ANDROID"
+            : "READY";
 
 }
 
@@ -698,11 +713,10 @@ function initializeVoiceRecognition() {
 
 
     /*
-       We allow both English and Urdu/Roman Urdu
-       commands to be tested in Phase 1.
+       Phase 1 browser voice recognition.
 
-       Android native voice engine can replace this
-       later.
+       Android native voice engine will be connected
+       in a later phase.
     */
 
     recognition.lang =
@@ -835,11 +849,6 @@ function initializeVoiceRecognition() {
 function startListening() {
 
     if (!recognitionAvailable) {
-
-        /*
-           Browser does not support the API.
-           We still run the visual simulation.
-        */
 
         runDemoListening();
 
@@ -1045,6 +1054,155 @@ function detectIntent(command) {
 
 
     /* -------------------------------
+       TIKTOK
+    -------------------------------- */
+
+    if (
+        command.includes("tiktok") &&
+        (
+            command.includes("open") ||
+            command.includes("khol") ||
+            command.includes("kholo")
+        )
+    ) {
+
+        return {
+            type: "OPEN_APP",
+            app: "TikTok"
+        };
+
+    }
+
+
+    /* -------------------------------
+       INSTAGRAM
+    -------------------------------- */
+
+    if (
+        command.includes("instagram") &&
+        (
+            command.includes("open") ||
+            command.includes("khol") ||
+            command.includes("kholo")
+        )
+    ) {
+
+        return {
+            type: "OPEN_APP",
+            app: "Instagram"
+        };
+
+    }
+
+
+    /* -------------------------------
+       FACEBOOK
+    -------------------------------- */
+
+    if (
+        command.includes("facebook") &&
+        (
+            command.includes("open") ||
+            command.includes("khol") ||
+            command.includes("kholo")
+        )
+    ) {
+
+        return {
+            type: "OPEN_APP",
+            app: "Facebook"
+        };
+
+    }
+
+
+    /* -------------------------------
+       WHATSAPP
+    -------------------------------- */
+
+    if (
+        command.includes("whatsapp") &&
+        (
+            command.includes("open") ||
+            command.includes("khol") ||
+            command.includes("kholo")
+        )
+    ) {
+
+        return {
+            type: "OPEN_APP",
+            app: "WhatsApp"
+        };
+
+    }
+
+
+    /* -------------------------------
+       TELEGRAM
+    -------------------------------- */
+
+    if (
+        command.includes("telegram") &&
+        (
+            command.includes("open") ||
+            command.includes("khol") ||
+            command.includes("kholo")
+        )
+    ) {
+
+        return {
+            type: "OPEN_APP",
+            app: "Telegram"
+        };
+
+    }
+
+
+    /* -------------------------------
+       SPOTIFY
+    -------------------------------- */
+
+    if (
+        command.includes("spotify") &&
+        (
+            command.includes("open") ||
+            command.includes("khol") ||
+            command.includes("kholo")
+        )
+    ) {
+
+        return {
+            type: "OPEN_APP",
+            app: "Spotify"
+        };
+
+    }
+
+
+    /* -------------------------------
+       SETTINGS
+    -------------------------------- */
+
+    if (
+        (
+            command.includes("settings") ||
+            command.includes("setting")
+        ) &&
+        (
+            command.includes("open") ||
+            command.includes("khol") ||
+            command.includes("kholo")
+        )
+    ) {
+
+        return {
+            type: "OPEN_SETTINGS"
+        };
+
+    }
+
+
+    /* -------------------------------
        FLASHLIGHT ON
     -------------------------------- */
 
@@ -1194,20 +1352,30 @@ async function executeIntent(intent, originalCommand) {
 
             await wait(700);
 
+
+            if (androidConnected) {
+
+                const opened =
+                    openAndroidApp(
+                        "YouTube"
+                    );
+
+                if (opened) {
+
+                    speakResponse(
+                        "Opening YouTube."
+                    );
+
+                    break;
+
+                }
+
+            }
+
+
             speakResponse(
                 "Opening YouTube."
             );
-
-            /*
-               IMPORTANT:
-
-               Phase 1 browser version opens
-               the website only.
-
-               Phase 2 Android version will
-               open the actual YouTube app
-               using Android Intent.
-            */
 
             openWebsite(
                 "https://www.youtube.com/"
@@ -1232,20 +1400,121 @@ async function executeIntent(intent, originalCommand) {
 
             await wait(700);
 
+
+            if (androidConnected) {
+
+                const opened =
+                    openAndroidApp(
+                        "Chrome"
+                    );
+
+                if (opened) {
+
+                    speakResponse(
+                        "Opening Chrome."
+                    );
+
+                    break;
+
+                }
+
+            }
+
+
             speakResponse(
                 "Opening the browser."
             );
 
-            /*
-               Browser cannot guarantee that
-               the Chrome app itself opens.
-
-               Android native layer will
-               handle this later.
-            */
-
             openWebsite(
                 "https://www.google.com/"
+            );
+
+            break;
+
+
+        /* =========================
+           OTHER ANDROID APPS
+        ========================== */
+
+        case "OPEN_APP":
+
+            setState(
+                JARVIS_STATE.EXECUTING,
+                {
+                    action:
+                        `Opening ${intent.app}...`
+                }
+            );
+
+            await wait(500);
+
+
+            if (androidConnected) {
+
+                const opened =
+                    openAndroidApp(
+                        intent.app
+                    );
+
+                if (opened) {
+
+                    speakResponse(
+                        `Opening ${intent.app}.`
+                    );
+
+                    break;
+
+                }
+
+            }
+
+
+            speakResponse(
+                `${intent.app} is not available as a native Android app action yet.`
+            );
+
+            break;
+
+
+        /* =========================
+           SETTINGS
+        ========================== */
+
+        case "OPEN_SETTINGS":
+
+            setState(
+                JARVIS_STATE.EXECUTING,
+                {
+                    action:
+                        "Opening Android settings..."
+                }
+            );
+
+            await wait(500);
+
+
+            if (androidConnected) {
+
+                const opened =
+                    executeAndroidSystemAction(
+                        "SETTINGS"
+                    );
+
+                if (opened) {
+
+                    speakResponse(
+                        "Opening settings."
+                    );
+
+                    break;
+
+                }
+
+            }
+
+
+            speakResponse(
+                "Android settings are available in the Android app."
             );
 
             break;
@@ -1267,32 +1536,46 @@ async function executeIntent(intent, originalCommand) {
 
             await wait(600);
 
-            if (
-                intent.value === "ON"
-            ) {
 
-                speakResponse(
-                    "Flashlight command received."
-                );
+            if (androidConnected) {
 
-                showToast(
-                    "Flashlight: Android native action required."
-                );
+                const action =
+                    intent.value === "ON"
+                        ? "FLASHLIGHT_ON"
+                        : "FLASHLIGHT_OFF";
 
-            } else {
+                const success =
+                    executeAndroidSystemAction(
+                        action
+                    );
 
-                speakResponse(
-                    "Flashlight off command received."
-                );
+                if (success) {
 
-                showToast(
-                    "Flashlight: Android native action required."
-                );
+                    if (
+                        intent.value === "ON"
+                    ) {
+
+                        speakResponse(
+                            "Flashlight is on."
+                        );
+
+                    } else {
+
+                        speakResponse(
+                            "Flashlight is off."
+                        );
+
+                    }
+
+                    break;
+
+                }
 
             }
 
-            setState(
-                JARVIS_STATE.IDLE
+
+            speakResponse(
+                "Flashlight control is not available in browser mode."
             );
 
             break;
@@ -1314,16 +1597,29 @@ async function executeIntent(intent, originalCommand) {
 
             await wait(500);
 
+
+            if (androidConnected) {
+
+                const success =
+                    executeAndroidSystemAction(
+                        "HOME"
+                    );
+
+                if (success) {
+
+                    speakResponse(
+                        "Going to the home screen."
+                    );
+
+                    break;
+
+                }
+
+            }
+
+
             speakResponse(
-                "Home screen command received."
-            );
-
-            showToast(
-                "Home action will be connected in Android phase."
-            );
-
-            setState(
-                JARVIS_STATE.IDLE
+                "Home screen control is available in the Android app."
             );
 
             break;
@@ -1398,13 +1694,11 @@ async function answerGeneralQuestion(command) {
     /*
        Phase 1 fallback.
 
-       Later this function will send the user's
-       question to the selected AI API/backend.
+       AI API will be connected in a future phase.
 
-       The API key should NOT be hardcoded into
-       the final Android APK.
+       API keys should NOT be hardcoded into the
+       final Android APK.
     */
-
 
     await wait(700);
 
@@ -1525,6 +1819,64 @@ function speakResponse(text) {
     assistantSubMessage.textContent =
         "JARVIS response";
 
+
+    /* =====================================================
+       ANDROID NATIVE TTS — PHASE 2
+    ===================================================== */
+
+    if (
+        androidConnected &&
+        window.JarvisAndroid &&
+        typeof window.JarvisAndroid.speak ===
+        "function"
+    ) {
+
+        try {
+
+            const nativeSpeech =
+                speakWithAndroid(text);
+
+            if (nativeSpeech) {
+
+                setState(
+                    JARVIS_STATE.SPEAKING
+                );
+
+                clearTimeout(
+                    speechTimer
+                );
+
+                speechTimer =
+                    setTimeout(() => {
+
+                        setState(
+                            JARVIS_STATE.IDLE
+                        );
+
+                    }, Math.max(
+                        1500,
+                        text.length * 55
+                    ));
+
+                return;
+
+            }
+
+        } catch (error) {
+
+            console.warn(
+                "Native Android TTS failed:",
+                error
+            );
+
+        }
+
+    }
+
+
+    /* =====================================================
+       BROWSER TTS — PHASE 1 FALLBACK
+    ===================================================== */
 
     if (
         "speechSynthesis" in window
@@ -1780,6 +2132,11 @@ function stopAllOperations() {
     }
 
 
+    /* Stop Android native TTS */
+
+    stopAndroidSpeech();
+
+
     if (thinkingOverlay) {
 
         thinkingOverlay.classList.remove(
@@ -1921,16 +2278,6 @@ document.addEventListener(
             document.hidden
         ) {
 
-            /*
-               IMPORTANT:
-
-               This does NOT create a real Android
-               background microphone service.
-
-               Native background service will be
-               implemented later.
-            */
-
             console.log(
                 "JARVIS UI moved to background."
             );
@@ -1948,63 +2295,522 @@ document.addEventListener(
 
 
 /* =========================================================
-   22. FUTURE ANDROID BRIDGE
+   22. ANDROID BRIDGE — PHASE 2
 ========================================================= */
 
+
 /*
-   Later Android native code can expose a bridge
-   such as:
+   AndroidBridge.kt exposes:
 
-       window.JarvisAndroid.openApp(...)
-       window.JarvisAndroid.flashlight(...)
-       window.JarvisAndroid.home(...)
-       window.JarvisAndroid.speak(...)
-       window.JarvisAndroid.startBackgroundMode(...)
-
-   We deliberately keep this isolated so the
-   frontend remains clean.
+   window.JarvisAndroid.openApp(...)
+   window.JarvisAndroid.systemAction(...)
+   window.JarvisAndroid.speak(...)
+   window.JarvisAndroid.stopSpeaking(...)
+   window.JarvisAndroid.startJarvisService(...)
+   window.JarvisAndroid.stopJarvisService(...)
+   window.JarvisAndroid.isJarvisServiceRunning(...)
+   window.JarvisAndroid.ping(...)
 */
 
 
-function androidAction(action, payload = {}) {
+function initializeAndroidBridge() {
 
     if (
-        window.JarvisAndroid &&
-        typeof window.JarvisAndroid[action] ===
-        "function"
+        window.JarvisAndroid
     ) {
+
+        androidConnected = true;
+
+        console.log(
+            "JARVIS Android bridge detected."
+        );
 
         try {
 
-            return window.JarvisAndroid[action](
-                JSON.stringify(payload)
-            );
+            if (
+                typeof window.JarvisAndroid.ping ===
+                "function"
+            ) {
+
+                console.log(
+                    window.JarvisAndroid.ping()
+                );
+
+            }
 
         } catch (error) {
 
-            console.error(
-                "Android bridge error:",
+            console.warn(
+                "Android bridge ping failed:",
                 error
             );
 
         }
 
+    } else {
+
+        androidConnected = false;
+
+        console.log(
+            "Android bridge not available. Browser mode active."
+        );
+
     }
-
-
-    console.log(
-        "Android action waiting:",
-        action,
-        payload
-    );
-
-    return null;
 
 }
 
 
 /* =========================================================
-   23. FUTURE COMMAND ROUTER HOOK
+   ANDROID READY CALLBACK
+   Called by MainActivity
+========================================================= */
+
+function handleAndroidReady() {
+
+    androidConnected = true;
+
+    console.log(
+        "JARVIS Android Core Connected."
+    );
+
+    if (systemStatus) {
+
+        systemStatus.textContent =
+            "ANDROID READY";
+
+    }
+
+    if (backgroundBadge) {
+
+        backgroundBadge.textContent =
+            "ANDROID";
+
+    }
+
+    showToast(
+        "JARVIS Android Core Connected."
+    );
+
+}
+
+
+/* =========================================================
+   ANDROID MICROPHONE PERMISSION GRANTED
+========================================================= */
+
+function handleAndroidPermissionGranted(
+    permission
+) {
+
+    if (
+        permission ===
+        "MICROPHONE"
+    ) {
+
+        androidMicrophoneGranted =
+            true;
+
+        console.log(
+            "Android microphone permission granted."
+        );
+
+        showToast(
+            "Microphone permission granted."
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   ANDROID MICROPHONE PERMISSION DENIED
+========================================================= */
+
+function handleAndroidPermissionDenied(
+    permission
+) {
+
+    if (
+        permission ===
+        "MICROPHONE"
+    ) {
+
+        androidMicrophoneGranted =
+            false;
+
+        console.warn(
+            "Android microphone permission denied."
+        );
+
+        showToast(
+            "Microphone permission denied."
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   NATIVE APP LAUNCHER
+========================================================= */
+
+function openAndroidApp(
+    appName
+) {
+
+    if (
+        !window.JarvisAndroid ||
+        typeof window.JarvisAndroid.openApp !==
+        "function"
+    ) {
+
+        return false;
+    }
+
+
+    try {
+
+        return Boolean(
+            window.JarvisAndroid.openApp(
+                appName
+            )
+        );
+
+    } catch (error) {
+
+        console.error(
+            "Android app launch error:",
+            error
+        );
+
+        return false;
+
+    }
+
+}
+
+
+/* =========================================================
+   NATIVE SYSTEM ACTION
+========================================================= */
+
+function executeAndroidSystemAction(
+    action
+) {
+
+    if (
+        !window.JarvisAndroid ||
+        typeof window.JarvisAndroid.systemAction !==
+        "function"
+    ) {
+
+        return false;
+    }
+
+
+    try {
+
+        return Boolean(
+            window.JarvisAndroid.systemAction(
+                action
+            )
+        );
+
+    } catch (error) {
+
+        console.error(
+            "Android system action error:",
+            error
+        );
+
+        return false;
+
+    }
+
+}
+
+
+/* =========================================================
+   NATIVE JARVIS SPEECH
+========================================================= */
+
+function speakWithAndroid(
+    text
+) {
+
+    if (
+        !window.JarvisAndroid ||
+        typeof window.JarvisAndroid.speak !==
+        "function"
+    ) {
+
+        return false;
+    }
+
+
+    try {
+
+        return Boolean(
+            window.JarvisAndroid.speak(
+                text
+            )
+        );
+
+    } catch (error) {
+
+        console.error(
+            "Android TTS error:",
+            error
+        );
+
+        return false;
+
+    }
+
+}
+
+
+/* =========================================================
+   STOP ANDROID SPEECH
+========================================================= */
+
+function stopAndroidSpeech() {
+
+    if (
+        !window.JarvisAndroid ||
+        typeof window.JarvisAndroid.stopSpeaking !==
+        "function"
+    ) {
+
+        return;
+    }
+
+
+    try {
+
+        window.JarvisAndroid.stopSpeaking();
+
+    } catch (error) {
+
+        console.warn(
+            "Unable to stop Android speech:",
+            error
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   START JARVIS BACKGROUND SERVICE
+========================================================= */
+
+function startAndroidService() {
+
+    if (
+        !window.JarvisAndroid ||
+        typeof window.JarvisAndroid.startJarvisService !==
+        "function"
+    ) {
+
+        return false;
+    }
+
+
+    try {
+
+        const result =
+            Boolean(
+                window.JarvisAndroid.startJarvisService()
+            );
+
+
+        if (result) {
+
+            if (backgroundBadge) {
+
+                backgroundBadge.textContent =
+                    "ACTIVE";
+
+            }
+
+            showToast(
+                "JARVIS background service started."
+            );
+
+        }
+
+
+        return result;
+
+    } catch (error) {
+
+        console.error(
+            "JARVIS service start error:",
+            error
+        );
+
+        return false;
+
+    }
+
+}
+
+
+/* =========================================================
+   STOP JARVIS BACKGROUND SERVICE
+========================================================= */
+
+function stopAndroidService() {
+
+    if (
+        !window.JarvisAndroid ||
+        typeof window.JarvisAndroid.stopJarvisService !==
+        "function"
+    ) {
+
+        return false;
+    }
+
+
+    try {
+
+        const result =
+            Boolean(
+                window.JarvisAndroid.stopJarvisService()
+            );
+
+
+        if (result) {
+
+            if (backgroundBadge) {
+
+                backgroundBadge.textContent =
+                    "READY";
+
+            }
+
+            showToast(
+                "JARVIS background service stopped."
+            );
+
+        }
+
+
+        return result;
+
+    } catch (error) {
+
+        console.error(
+            "JARVIS service stop error:",
+            error
+        );
+
+        return false;
+
+    }
+
+}
+
+
+/* =========================================================
+   CHECK JARVIS SERVICE
+========================================================= */
+
+function isAndroidServiceRunning() {
+
+    if (
+        !window.JarvisAndroid ||
+        typeof window.JarvisAndroid.isJarvisServiceRunning !==
+        "function"
+    ) {
+
+        return false;
+    }
+
+
+    try {
+
+        return Boolean(
+            window.JarvisAndroid.isJarvisServiceRunning()
+        );
+
+    } catch (error) {
+
+        console.warn(
+            "Unable to check JARVIS service:",
+            error
+        );
+
+        return false;
+
+    }
+
+}
+
+
+/* =========================================================
+   GENERIC ANDROID ACTION
+========================================================= */
+
+function androidAction(
+    action,
+    payload = null
+) {
+
+    if (
+        !window.JarvisAndroid
+    ) {
+
+        return null;
+    }
+
+
+    if (
+        typeof window.JarvisAndroid[action] !==
+        "function"
+    ) {
+
+        return null;
+    }
+
+
+    try {
+
+        if (
+            payload === null ||
+            typeof payload ===
+            "undefined"
+        ) {
+
+            return window.JarvisAndroid[action]();
+
+        }
+
+
+        return window.JarvisAndroid[action](
+            payload
+        );
+
+    } catch (error) {
+
+        console.error(
+            "Android bridge error:",
+            error
+        );
+
+        return null;
+
+    }
+
+}
+
+
+/* =========================================================
+   ANDROID COMMAND ROUTER HOOK
 ========================================================= */
 
 function sendToAndroidCommand(
@@ -2012,20 +2818,41 @@ function sendToAndroidCommand(
     intent
 ) {
 
-    return androidAction(
-        "executeCommand",
-        {
-            command,
-            intent
-        }
+    console.log(
+        "Android command:",
+        command,
+        intent
     );
+
+
+    /*
+       Full AI Command Router will be added
+       in a future phase.
+    */
+
+    return null;
 
 }
 
 
 /* =========================================================
-   24. PUBLIC JARVIS API
-   Future native integration can use this.
+   ANDROID CALLBACKS EXPOSED TO MAIN ACTIVITY
+========================================================= */
+
+
+/*
+   MainActivity calls:
+
+   window.JARVIS.androidReady()
+
+   window.JARVIS.androidPermissionGranted("MICROPHONE")
+
+   window.JARVIS.androidPermissionDenied("MICROPHONE")
+*/
+
+
+/* =========================================================
+   23. PUBLIC JARVIS API
 ========================================================= */
 
 window.JARVIS = {
@@ -2092,13 +2919,135 @@ window.JARVIS = {
             message
         );
 
+    },
+
+
+    /* =========================================
+       ANDROID READY CALLBACK
+    ========================================== */
+
+    androidReady() {
+
+        handleAndroidReady();
+
+    },
+
+
+    /* =========================================
+       ANDROID PERMISSION CALLBACKS
+    ========================================== */
+
+    androidPermissionGranted(
+        permission
+    ) {
+
+        handleAndroidPermissionGranted(
+            permission
+        );
+
+    },
+
+
+    androidPermissionDenied(
+        permission
+    ) {
+
+        handleAndroidPermissionDenied(
+            permission
+        );
+
+    },
+
+
+    /* =========================================
+       ANDROID APP CONTROL
+    ========================================== */
+
+    openApp(appName) {
+
+        return openAndroidApp(
+            appName
+        );
+
+    },
+
+
+    systemAction(action) {
+
+        return executeAndroidSystemAction(
+            action
+        );
+
+    },
+
+
+    /* =========================================
+       ANDROID SPEECH
+    ========================================== */
+
+    androidSpeak(text) {
+
+        return speakWithAndroid(
+            text
+        );
+
+    },
+
+
+    stopAndroidSpeech() {
+
+        stopAndroidSpeech();
+
+    },
+
+
+    /* =========================================
+       ANDROID SERVICE
+    ========================================== */
+
+    startBackgroundService() {
+
+        return startAndroidService();
+
+    },
+
+
+    stopBackgroundService() {
+
+        return stopAndroidService();
+
+    },
+
+
+    isBackgroundServiceRunning() {
+
+        return isAndroidServiceRunning();
+
+    },
+
+
+    /* =========================================
+       ANDROID STATUS
+    ========================================== */
+
+    isAndroidConnected() {
+
+        return androidConnected;
+
+    },
+
+
+    isAndroidMicrophoneGranted() {
+
+        return androidMicrophoneGranted;
+
     }
 
 };
 
 
 /* =========================================================
-   25. DEVELOPMENT LOG
+   24. DEVELOPMENT LOG
 ========================================================= */
 
 console.log(
@@ -2112,12 +3061,12 @@ console.log(
 );
 
 console.log(
-    "%c Personal AI Assistant — Phase 1 UI Engine",
+    "%c Personal AI Assistant — Phase 1 + Phase 2",
     "color:#75dce8;font-size:12px;"
 );
 
 console.log(
-    "%c Android native control layer will be connected later.",
+    "%c Android native bridge integration enabled.",
     "color:#668b93;font-size:11px;"
 );
 
