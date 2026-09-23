@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- =========================================================
+         JARVIS - Android Permissions
+         Phase 2
+         ========================================================= -->
+
+    <!-- Internet
+         Future AI/API communication ke liye -->
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <!-- Microphone
+         Voice commands ke liye -->
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+
+    <!-- Camera permission
+         Android torch/flashlight control ke liye required ho sakta hai -->
+    <uses-permission android:name="android.permission.CAMERA" />
+
+    <!-- Foreground service
+         JARVIS ko user-visible background service ke taur par
+         run karne ke liye -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+
+    <!-- Android 14+
+         Microphone foreground service ke liye -->
+    <uses-permission
+        android:name="android.permission.FOREGROUND_SERVICE_MICROPHONE" />
+
+    <!-- Android 13+
+         Foreground-service notification ke liye -->
+    <uses-permission
+        android:name="android.permission.POST_NOTIFICATIONS" />
+
+    <!-- Optional vibration feedback -->
+    <uses-permission android:name="android.permission.VIBRATE" />
+
+
+    <!-- =========================================================
+         APPLICATION
+         ========================================================= -->
+
+    <application
+
+        android:allowBackup="true"
+
+        android:icon="@mipmap/ic_launcher"
+
+        android:label="JARVIS"
+
+        android:roundIcon="@mipmap/ic_launcher_round"
+
+        android:supportsRtl="true"
+
+        android:theme="@style/Theme.Jarvis"
+
+        android:usesCleartextTraffic="false">
+
+
+        <!-- =====================================================
+             MAIN ACTIVITY
+             JARVIS ka main UI / WebView interface
+             ===================================================== -->
+
+        <activity
+
+            android:name=".MainActivity"
+
+            android:exported="true"
+
+            android:screenOrientation="portrait"
+
+            android:configChanges="orientation|screenSize|keyboardHidden"
+
+            android:windowSoftInputMode="adjustResize">
+
+            <!-- App launcher -->
+            <intent-filter>
+
+                <action
+                    android:name="android.intent.action.MAIN" />
+
+                <category
+                    android:name="android.intent.category.LAUNCHER" />
+
+            </intent-filter>
+
+        </activity>
+
+
+        <!-- =====================================================
+             JARVIS VOICE SERVICE
+
+             Phase 2:
+             - Voice listening
+             - Background/foreground operation
+             - Command processing foundation
+             ===================================================== -->
+
+        <service
+
+            android:name=".JarvisService"
+
+            android:enabled="true"
+
+            android:exported="false"
+
+            android:stopWithTask="false"
+
+            android:foregroundServiceType="microphone" />
+
+
+    </application>
+
+</manifest>
