@@ -1,0 +1,763 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    >
+
+    <meta name="theme-color" content="#02070c">
+
+    <meta
+        name="description"
+        content="JARVIS - Futuristic Personal AI Assistant"
+    >
+
+    <title>J A R V I S — Personal AI Assistant</title>
+
+    <!-- Main stylesheet -->
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <!-- =====================================================
+         BACKGROUND
+    ====================================================== -->
+
+    <div class="background">
+
+        <div class="grid"></div>
+
+        <div class="glow glow-one"></div>
+        <div class="glow glow-two"></div>
+        <div class="glow glow-three"></div>
+
+        <div class="particles" id="particles"></div>
+
+    </div>
+
+
+    <!-- =====================================================
+         MAIN APPLICATION
+    ====================================================== -->
+
+    <main class="jarvis-app" id="jarvisApp">
+
+
+        <!-- =================================================
+             TOP HEADER
+        ================================================== -->
+
+        <header class="top-header">
+
+            <div class="brand">
+
+                <div class="brand-mark">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+
+                <div class="brand-text">
+
+                    <h1>J A R V I S</h1>
+
+                    <p>
+                        PERSONAL AI ASSISTANT
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="header-status">
+
+                <div class="connection">
+                    <span class="status-dot"></span>
+                    <span id="connectionText">SYSTEM ONLINE</span>
+                </div>
+
+                <div class="time" id="currentTime">
+                    00:00
+                </div>
+
+            </div>
+
+        </header>
+
+
+
+        <!-- =================================================
+             MAIN CONTENT
+        ================================================== -->
+
+        <section class="main-interface">
+
+
+            <!-- =================================================
+                 LEFT / SYSTEM PANEL
+            ================================================== -->
+
+            <aside class="system-panel">
+
+                <div class="panel-title">
+                    <span class="line"></span>
+                    SYSTEM
+                </div>
+
+
+                <div class="system-card">
+
+                    <div class="system-icon">
+                        ◉
+                    </div>
+
+                    <div class="system-info">
+
+                        <span class="system-label">
+                            CORE
+                        </span>
+
+                        <strong>
+                            JARVIS
+                        </strong>
+
+                    </div>
+
+                    <span class="system-state">
+                        READY
+                    </span>
+
+                </div>
+
+
+                <div class="system-card">
+
+                    <div class="system-icon">
+                        ◌
+                    </div>
+
+                    <div class="system-info">
+
+                        <span class="system-label">
+                            VOICE
+                        </span>
+
+                        <strong id="voiceStatus">
+                            STANDBY
+                        </strong>
+
+                    </div>
+
+                    <span class="system-state" id="voiceIndicator">
+                        OFF
+                    </span>
+
+                </div>
+
+
+                <div class="system-card">
+
+                    <div class="system-icon">
+                        ◇
+                    </div>
+
+                    <div class="system-info">
+
+                        <span class="system-label">
+                            AI CORE
+                        </span>
+
+                        <strong id="aiStatus">
+                            READY
+                        </strong>
+
+                    </div>
+
+                    <span class="system-state">
+                        ONLINE
+                    </span>
+
+                </div>
+
+
+                <div class="system-card">
+
+                    <div class="system-icon">
+                        ◈
+                    </div>
+
+                    <div class="system-info">
+
+                        <span class="system-label">
+                            SECURITY
+                        </span>
+
+                        <strong id="securityStatus">
+                            PROTECTED
+                        </strong>
+
+                    </div>
+
+                    <span class="system-state">
+                        ACTIVE
+                    </span>
+
+                </div>
+
+
+                <!-- Future background assistant -->
+
+                <div class="background-mode">
+
+                    <div class="background-header">
+
+                        <span>
+                            BACKGROUND MODE
+                        </span>
+
+                        <span class="mode-badge" id="backgroundBadge">
+                            READY
+                        </span>
+
+                    </div>
+
+                    <p>
+                        JARVIS can later remain available
+                        while you use other applications.
+                    </p>
+
+                </div>
+
+            </aside>
+
+
+
+            <!-- =================================================
+                 CENTER AI CORE
+            ================================================== -->
+
+            <section class="ai-core-area">
+
+
+                <!-- AI STATUS -->
+
+                <div class="ai-status">
+
+                    <span class="status-pulse"></span>
+
+                    <span id="mainStatus">
+                        JARVIS IS READY
+                    </span>
+
+                </div>
+
+
+
+                <!-- =================================================
+                     HOLOGRAPHIC CORE
+                ================================================== -->
+
+                <div class="hologram-container" id="hologram">
+
+
+                    <!-- Outer rings -->
+
+                    <div class="ring ring-one"></div>
+                    <div class="ring ring-two"></div>
+                    <div class="ring ring-three"></div>
+                    <div class="ring ring-four"></div>
+
+
+                    <!-- Scanning line -->
+
+                    <div class="scan-line"></div>
+
+
+                    <!-- AI CORE -->
+
+                    <div class="ai-core">
+
+                        <div class="core-inner">
+
+                            <div class="core-eye left-eye"></div>
+                            <div class="core-eye right-eye"></div>
+
+                            <div class="core-mouth">
+                                <span></span>
+                                <span></span>
+                                <span></span>
+                                <span></span>
+                                <span></span>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Orbit elements -->
+
+                    <div class="orbit orbit-one">
+                        <span></span>
+                    </div>
+
+                    <div class="orbit orbit-two">
+                        <span></span>
+                    </div>
+
+                    <div class="orbit orbit-three">
+                        <span></span>
+                    </div>
+
+
+                    <!-- Holographic data -->
+
+                    <div class="holo-data data-one">
+                        <span>CORE</span>
+                        <strong>ONLINE</strong>
+                    </div>
+
+                    <div class="holo-data data-two">
+                        <span>VOICE</span>
+                        <strong>READY</strong>
+                    </div>
+
+                    <div class="holo-data data-three">
+                        <span>AI</span>
+                        <strong>ACTIVE</strong>
+                    </div>
+
+
+                </div>
+
+
+
+                <!-- =================================================
+                     JARVIS MESSAGE
+                ================================================== -->
+
+                <div class="assistant-message">
+
+                    <p class="message-label">
+                        JARVIS
+                    </p>
+
+                    <h2 id="assistantMessage">
+                        I'm your personal AI assistant.
+                    </h2>
+
+                    <p id="assistantSubMessage">
+                        How may I help you?
+                    </p>
+
+                </div>
+
+
+
+                <!-- =================================================
+                     USER COMMAND
+                ================================================== -->
+
+                <div class="command-display">
+
+                    <span class="command-icon">
+                        ❯
+                    </span>
+
+                    <div class="command-content">
+
+                        <span class="command-label">
+                            LAST COMMAND
+                        </span>
+
+                        <p id="commandText">
+                            Waiting for your command...
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- =================================================
+                     LISTENING BUTTON
+                ================================================== -->
+
+                <button
+                    class="listen-button"
+                    id="listenButton"
+                    type="button"
+                    aria-label="Activate JARVIS voice assistant"
+                >
+
+                    <span class="button-glow"></span>
+
+                    <span class="mic-ring">
+
+                        <span class="mic-icon">
+
+                            <svg
+                                viewBox="0 0 24 24"
+                                aria-hidden="true"
+                            >
+                                <path
+                                    d="M12 14a3 3 0 0 0 3-3V6a3 3 0 0 0-6 0v5a3 3 0 0 0 3 3Z"
+                                />
+
+                                <path
+                                    d="M19 11a7 7 0 0 1-14 0"
+                                />
+
+                                <path
+                                    d="M12 18v4"
+                                />
+
+                                <path
+                                    d="M8 22h8"
+                                />
+                            </svg>
+
+                        </span>
+
+                    </span>
+
+
+                    <span class="listen-text">
+
+                        <strong id="listenText">
+                            LISTEN
+                        </strong>
+
+                        <small>
+                            TAP TO SPEAK
+                        </small>
+
+                    </span>
+
+                </button>
+
+
+
+                <!-- Voice authentication status -->
+
+                <div class="voice-auth">
+
+                    <span class="auth-icon">
+                        ◉
+                    </span>
+
+                    <span id="authText">
+                        Voice authentication ready
+                    </span>
+
+                </div>
+
+
+            </section>
+
+
+
+            <!-- =================================================
+                 RIGHT / COMMAND PANEL
+            ================================================== -->
+
+            <aside class="command-panel">
+
+
+                <div class="panel-title">
+                    <span class="line"></span>
+                    QUICK COMMANDS
+                </div>
+
+
+                <div class="quick-commands">
+
+
+                    <button
+                        class="quick-command"
+                        type="button"
+                        data-command="Open YouTube"
+                    >
+
+                        <span class="quick-icon">
+                            ▶
+                        </span>
+
+                        <span>
+                            Open YouTube
+                        </span>
+
+                    </button>
+
+
+                    <button
+                        class="quick-command"
+                        type="button"
+                        data-command="Open Chrome"
+                    >
+
+                        <span class="quick-icon">
+                            ◉
+                        </span>
+
+                        <span>
+                            Open Chrome
+                        </span>
+
+                    </button>
+
+
+                    <button
+                        class="quick-command"
+                        type="button"
+                        data-command="Turn flashlight on"
+                    >
+
+                        <span class="quick-icon">
+                            ◇
+                        </span>
+
+                        <span>
+                            Flashlight
+                        </span>
+
+                    </button>
+
+
+                    <button
+                        class="quick-command"
+                        type="button"
+                        data-command="Go to home screen"
+                    >
+
+                        <span class="quick-icon">
+                            ⌂
+                        </span>
+
+                        <span>
+                            Home Screen
+                        </span>
+
+                    </button>
+
+
+                </div>
+
+
+
+                <!-- =================================================
+                     COMMAND EXAMPLES
+                ================================================== -->
+
+                <div class="examples-box">
+
+                    <div class="examples-title">
+                        TRY SAYING
+                    </div>
+
+
+                    <div class="example-command">
+                        <span>“</span>
+                        YouTube kholo
+                        <span>”</span>
+                    </div>
+
+                    <div class="example-command">
+                        <span>“</span>
+                        Flashlight on karo
+                        <span>”</span>
+                    </div>
+
+                    <div class="example-command">
+                        <span>“</span>
+                        Chrome kholo
+                        <span>”</span>
+                    </div>
+
+                    <div class="example-command">
+                        <span>“</span>
+                        JARVIS, kya haal hai?
+                        <span>”</span>
+                    </div>
+
+                </div>
+
+
+
+                <!-- =================================================
+                     SYSTEM INFORMATION
+                ================================================== -->
+
+                <div class="system-information">
+
+                    <div class="info-row">
+
+                        <span>
+                            MODE
+                        </span>
+
+                        <strong id="modeText">
+                            ASSISTANT
+                        </strong>
+
+                    </div>
+
+
+                    <div class="info-row">
+
+                        <span>
+                            SECURITY
+                        </span>
+
+                        <strong>
+                            VOICE AUTH
+                        </strong>
+
+                    </div>
+
+
+                    <div class="info-row">
+
+                        <span>
+                            STATUS
+                        </span>
+
+                        <strong id="systemStatus">
+                            READY
+                        </strong>
+
+                    </div>
+
+                </div>
+
+            </aside>
+
+        </section>
+
+
+
+        <!-- =================================================
+             BOTTOM STATUS BAR
+        ================================================== -->
+
+        <footer class="bottom-bar">
+
+
+            <div class="footer-item">
+
+                <span class="footer-dot"></span>
+
+                <span>
+                    JARVIS CORE
+                </span>
+
+                <strong>
+                    ONLINE
+                </strong>
+
+            </div>
+
+
+            <div class="footer-item">
+
+                <span class="footer-dot"></span>
+
+                <span>
+                    VOICE ENGINE
+                </span>
+
+                <strong id="footerVoice">
+                    STANDBY
+                </strong>
+
+            </div>
+
+
+            <div class="footer-item">
+
+                <span class="footer-dot"></span>
+
+                <span>
+                    AI CONNECTION
+                </span>
+
+                <strong id="footerAI">
+                    READY
+                </strong>
+
+            </div>
+
+
+            <div class="footer-version">
+                JARVIS v1.0
+            </div>
+
+        </footer>
+
+
+    </main>
+
+
+
+    <!-- =====================================================
+         LOADING / THINKING OVERLAY
+    ====================================================== -->
+
+    <div
+        class="thinking-overlay"
+        id="thinkingOverlay"
+        aria-hidden="true"
+    >
+
+        <div class="thinking-box">
+
+            <div class="thinking-core">
+
+                <span></span>
+                <span></span>
+                <span></span>
+
+            </div>
+
+            <h3>
+                JARVIS IS THINKING
+            </h3>
+
+            <p>
+                Processing your request...
+            </p>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- =====================================================
+         NOTIFICATION / TOAST
+    ====================================================== -->
+
+    <div
+        class="toast"
+        id="toast"
+        aria-live="polite"
+    >
+        System ready.
+    </div>
+
+
+
+    <!-- =====================================================
+         MAIN JAVASCRIPT
+    ====================================================== -->
+
+    <script src="script.js"></script>
+
+</body>
+</html>
